@@ -12,7 +12,10 @@ class App extends React.Component{
         super();
         this.addFish=this.addFish.bind(this);
         this.loadFish=this.loadFish.bind(this);
+        this.updateFish=this.updateFish.bind(this);
+        this.deleteFish=this.deleteFish.bind(this);
         this.addToOrder=this.addToOrder.bind(this);
+        this.removeFromOrder=this.removeFromOrder.bind(this);
         this.state={
             fishes:{},
             order:{}
@@ -32,23 +35,57 @@ class App extends React.Component{
         this.setState({fishes});
     }
 
+    updateFish(key,ufish){
+        const fishes={...this.state.fishes};
+        fishes[key]=ufish;
+        this.setState({fishes});
+    }
+
+    deleteFish(key){
+        const fishes={...this.state.fishes};
+        fishes[key]=null;
+        delete fishes[key];
+        this.setState({fishes});
+    }
+
     addToOrder(key){
         const order={...this.state.order};
         order[key]=order[key]+1 || 1;
         this.setState({order});
     }
 
-    /*componentWillMount(){
-        const sid=this.props.match.params.storeId;
-        this.ref=base.syncState(`${sid}/fishes`,{
-           context:this,
-           state:'fishes'
-        });
+    removeFromOrder(key){
+        const order={...this.state.order};
+        order[key]=null;
+        delete order[key];
+        this.setState({order});
     }
 
-    componentWillUnmount(){
-        base.removeBinding(this.ref);
+    componentWillMount(){
+        const sid=this.props.match.params.storeId;
+        const lref=localStorage.getItem(`order-${sid}`);
+        const fref=localStorage.getItem(`fish-${sid}`);
+        if(fref){
+            this.setState({
+              fishes:JSON.parse(fref)
+            });
+        }
+        if(lref){
+            this.setState({
+              order:JSON.parse(lref)
+            });
+        }
+    }
+
+    /*componentWillUnmount(){
+        localStorage.clear();
     }*/
+
+    componentWillUpdate(nextProps,nextState){
+        const sid=this.props.match.params.storeId;
+        localStorage.setItem(`order-${sid}`,JSON.stringify(nextState.order));
+        localStorage.setItem(`fish-${sid}`,JSON.stringify(nextState.fishes));
+    }
 
     render(){
         return (
@@ -62,8 +99,8 @@ class App extends React.Component{
                    }
                  </ul>
               </div>
-               <Order fishes={this.state.fishes} order={this.state.order}/>
-               <Inventory loadFish={this.loadFish} addFish={this.addFish}/>
+               <Order fishes={this.state.fishes} removeFromOrder={this.removeFromOrder} order={this.state.order}/>
+               <Inventory fishes={this.state.fishes} deleteFish={this.deleteFish} updateFish={this.updateFish} loadFish={this.loadFish} addFish={this.addFish}/>
             </div>
         )
     }
