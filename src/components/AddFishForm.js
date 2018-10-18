@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 class AddFishForm extends React.Component{
 
@@ -30,6 +31,10 @@ class AddFishForm extends React.Component{
             </form>
         )
     }
+}
+
+AddFishForm.propTypes={
+    addFish:propTypes.func.isRequired
 }
 
 export default AddFishForm;

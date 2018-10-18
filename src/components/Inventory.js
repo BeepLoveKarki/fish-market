@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 import AddFishForm from './AddFishForm';
 
 class Inventory extends React.Component{
@@ -29,7 +30,7 @@ class Inventory extends React.Component{
                    <option value="unavailable">Sold Out</option>
                </select>
                <textarea name="desc" value={fish.desc} onChange={(e)=>{this.handleChange(e,key)}} placeholder="Fish Description" required/>
-               <input name="url" value={fish.image} type="url" onChange={(e)=>{this.handleChange(e,key)}} placeholder="Image URL" required/>
+               <input name="image" value={fish.image} onChange={(e)=>{this.handleChange(e,key)}} type="url" placeholder="Image URL" required/>
                <button onClick={()=>{this.props.deleteFish(key)}}>Remove Fish</button>
             </div>
         )
@@ -45,6 +46,12 @@ class Inventory extends React.Component{
         </div>
         )
     }
+}
+
+Inventory.propTypes={
+    fishes:propTypes.object.isRequired,
+    loadFish:propTypes.func.isRequired,
+    addFish:propTypes.func.isRequired
 }
 
 export default Inventory;
