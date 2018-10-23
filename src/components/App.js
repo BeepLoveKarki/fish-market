@@ -3,65 +3,46 @@ import Header from './Header';
 import Order from './Order';
 import Inventory from'./Inventory';
 import Fish from './Fish';
-import fishes  from '../sample-fishes';
+import fishStore from '../stores/fishStore';
+import {createFish,editFish,deleteFish} from '../actions/fishActions';
 //import base from '../base';
 
 class App extends React.Component{
+    
+    state={
+        fishes:{},
+        order:{}
+    };
 
-    constructor(){
-        super();
-        this.addFish=this.addFish.bind(this);
-        this.loadFish=this.loadFish.bind(this);
-        this.updateFish=this.updateFish.bind(this);
-        this.deleteFish=this.deleteFish.bind(this);
-        this.addToOrder=this.addToOrder.bind(this);
-        this.removeFromOrder=this.removeFromOrder.bind(this);
-        this.state={
-            fishes:{},
-            order:{}
-        };
-    }
-
-    loadFish(){
+    loadFish=()=>{
         this.setState({
-          fishes:fishes
+          fishes:fishStore.getAll(this.props.match.params.storeId)
+        });
+    };
+
+    loadFish1=()=>{
+        this.setState({
+            fishes:fishStore.getAll1()
         });
     }
 
-    addFish(fish){
-        const fishes={...this.state.fishes};
-        const tstamp=Date.now();
-        fishes[`fish-${tstamp}`]=fish;
-        this.setState({fishes});
-    }
-
-    updateFish(key,ufish){
-        const fishes={...this.state.fishes};
-        fishes[key]=ufish;
-        this.setState({fishes});
-    }
-
-    deleteFish(key){
-        const fishes={...this.state.fishes};
-        fishes[key]=null;
-        delete fishes[key];
-        this.setState({fishes});
-    }
-
-    addToOrder(key){
+    addToOrder=(key)=>{
         const order={...this.state.order};
         order[key]=order[key]+1 || 1;
         this.setState({order});
-    }
+    };
 
-    removeFromOrder(key){
+    removeFromOrder=(key)=>{
         const order={...this.state.order};
         order[key]=null;
         delete order[key];
         this.setState({order});
-    }
+    };
 
     componentWillMount(){
+        fishStore.on("create",this.getnow);
+        fishStore.on("update",this.getnow);
+        fishStore.on("delete",this.getnow);
         const sid=this.props.match.params.storeId;
         const lref=localStorage.getItem(`order-${sid}`);
         const fref=localStorage.getItem(`fish-${sid}`);
@@ -77,9 +58,16 @@ class App extends React.Component{
         }
     }
 
-    /*componentWillUnmount(){
-        localStorage.clear();
-    }*/
+    componentWillUnmount(){
+        fishStore.removeAllListeners();
+    }
+
+    getnow=()=>{
+        const sid=this.props.match.params.storeId;
+        this.setState({fishes:fishStore.getAll()});
+        localStorage.setItem(`fish-${sid}`,JSON.stringify(fishStore.getAll()));
+    };
+
 
     componentWillUpdate(nextProps,nextState){
         const sid=this.props.match.params.storeId;
@@ -100,7 +88,7 @@ class App extends React.Component{
                  </ul>
               </div>
                <Order fishes={this.state.fishes} removeFromOrder={this.removeFromOrder} order={this.state.order}/>
-               <Inventory fishes={this.state.fishes} deleteFish={this.deleteFish} updateFish={this.updateFish} loadFish={this.loadFish} addFish={this.addFish}/>
+               <Inventory fishes={this.state.fishes} deleteFish={deleteFish} updateFish={editFish} loadFish={this.loadFish1} addFish={createFish}/>
             </div>
         )
     }

@@ -4,22 +4,16 @@ import AddFishForm from './AddFishForm';
 
 class Inventory extends React.Component{
 
-    constructor(){
-        super();
-        this.renderInventory=this.renderInventory.bind(this);
-        this.handleChange=this.handleChange.bind(this);
-    }
-
-    handleChange(e,key){
+    handleChange=(e,key)=>{
        const fish=this.props.fishes[key];
        const ufish={
            ...fish,
            [e.target.name]:e.target.value
        }
        this.props.updateFish(key,ufish);
-    }
+    };
 
-    renderInventory(key){
+    renderInventory=(key)=>{
         const fish=this.props.fishes[key];
         return(
             <div className="fish-edit" key={key}>
@@ -30,11 +24,11 @@ class Inventory extends React.Component{
                    <option value="unavailable">Sold Out</option>
                </select>
                <textarea name="desc" value={fish.desc} onChange={(e)=>{this.handleChange(e,key)}} placeholder="Fish Description" required/>
-               <input name="image" value={fish.image} onChange={(e)=>{this.handleChange(e,key)}} type="url" placeholder="Image URL" required/>
+               <input name="image" value={fish.image} onChange={(e)=>{this.handleChange(e,key)}} type="text" placeholder="Image URL" required/>
                <button onClick={()=>{this.props.deleteFish(key)}}>Remove Fish</button>
             </div>
         )
-    }
+    };
 
     render(){
         return (
@@ -42,16 +36,15 @@ class Inventory extends React.Component{
           <p>Inventory</p>
           {Object.keys(this.props.fishes).map(this.renderInventory)}
           <AddFishForm addFish={this.props.addFish}/>
-          <button onClick={this.props.loadFish}>Load Fish</button>
+          <button onClick={this.props.loadFish}>Load All Fish</button>
         </div>
         )
     }
-}
-
-Inventory.propTypes={
-    fishes:propTypes.object.isRequired,
-    loadFish:propTypes.func.isRequired,
-    addFish:propTypes.func.isRequired
+    static propTypes={
+        fishes:propTypes.object.isRequired,
+        loadFish:propTypes.func.isRequired,
+        addFish:propTypes.func.isRequired
+    }
 }
 
 export default Inventory;

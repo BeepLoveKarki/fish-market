@@ -1,1 +1,1 @@
-# react-practice
+# react-reactflux-redux-practice

@@ -1,7 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import {formatPrice} from '../helpers';
-import fishes from '../sample-fishes';
 
 class Fish extends React.Component{
     render(){
@@ -20,11 +19,10 @@ class Fish extends React.Component{
             </li>
         )
     }
-}
-
-fishes.propTypes={
+ static propTypes={
     addToOrder:propTypes.func.isRequired,
     index:propTypes.string.isRequired
+ }
 }
 
 export default Fish;

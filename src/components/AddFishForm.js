@@ -26,15 +26,14 @@ class AddFishForm extends React.Component{
                    <option value="unavailable">Sold Out</option>
                </select>
                <textarea ref={(input)=>{this.desc=input}} placeholder="Fish Description" required/>
-               <input type="url" ref={(input)=>{this.url=input}} placeholder="Image URL" required/>
+               <input type="text" ref={(input)=>{this.url=input}} placeholder="Image URL" required/>
                <button type="submit">+ Add</button>
             </form>
         )
     }
-}
-
-AddFishForm.propTypes={
-    addFish:propTypes.func.isRequired
+    static propTypes={
+        addFish:propTypes.func.isRequired
+    }
 }
 
 export default AddFishForm;
